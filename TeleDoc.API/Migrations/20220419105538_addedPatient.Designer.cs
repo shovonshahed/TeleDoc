@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeleDoc.API.Context;
 
@@ -11,9 +12,10 @@ using TeleDoc.API.Context;
 namespace TeleDoc.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220419105538_addedPatient")]
+    partial class addedPatient
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -215,7 +217,11 @@ namespace TeleDoc.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("DoctorId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("IssueDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("PatientId")
                         .HasColumnType("nvarchar(450)");
@@ -316,12 +322,6 @@ namespace TeleDoc.API.Migrations
                 {
                     b.HasBaseType("TeleDoc.DAL.Entities.ApplicationUser");
 
-                    b.Property<string>("CertificateUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("College")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Speciality")
                         .HasColumnType("nvarchar(max)");
 
@@ -406,7 +406,9 @@ namespace TeleDoc.API.Migrations
                 {
                     b.HasOne("TeleDoc.API.Area.Doctors.Models.Doctor", "Doctor")
                         .WithMany()
-                        .HasForeignKey("DoctorId");
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TeleDoc.API.Area.Patients.Models.Patient", null)
                         .WithMany("Prescriptions")

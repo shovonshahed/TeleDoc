@@ -10,13 +10,13 @@ using TeleDoc.DAL.Extensions;
 
 namespace TeleDoc.API.Services;
 
-public class AuthRepository<T> : IAuthRepository<T> where T : ApplicationUser
+public class AuthRepository<T> : IAuthRepository<T> where T : ApplicationUser, new()
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<T> _userManager;
+    private readonly SignInManager<T> _signInManager;
     private readonly IConfiguration _config;
 
-    public AuthRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config)
+    public AuthRepository(UserManager<T> userManager, SignInManager<T> signInManager, IConfiguration config)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -31,13 +31,14 @@ public class AuthRepository<T> : IAuthRepository<T> where T : ApplicationUser
         if (user is not null)
         {
             response.Status = ResponseStatus.Duplicate;
-            response.User = null;
+            response.Data = null;
 
             return response;
         }
 
-        user = new ApplicationUser
+        user = new T
         {
+            Name = model.Name,
             UserName = model.Email,
             Email = model.Email
         };
@@ -47,12 +48,12 @@ public class AuthRepository<T> : IAuthRepository<T> where T : ApplicationUser
         if (!result.Succeeded)
         {
             response.Status = ResponseStatus.Failed;
-            response.User = null;
+            response.Data = null;
             return response;
         }
 
         response.Status = ResponseStatus.Succeeded;
-        response.User = user;
+        response.Data = user;
 
         return response;
     }
@@ -67,7 +68,7 @@ public class AuthRepository<T> : IAuthRepository<T> where T : ApplicationUser
         {
             response.Status = ResponseStatus.NotFound;
             response.Token = null;
-            response.User = null;
+            response.Data = null;
         }
         else
         {
@@ -96,13 +97,13 @@ public class AuthRepository<T> : IAuthRepository<T> where T : ApplicationUser
 
                 response.Status = ResponseStatus.Succeeded;
                 response.Token = tokenHandler.WriteToken(token);
-                response.User = user;
+                response.Data = user;
             }
             else
             {
                 response.Status = ResponseStatus.Failed;
                 response.Token = null;
-                response.User = null;
+                response.Data = null;
             }
         }
 

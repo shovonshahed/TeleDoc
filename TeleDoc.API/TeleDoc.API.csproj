@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.4" />
         <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" />
@@ -22,7 +23,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Area" />
+      <Folder Include="Area\Admins\Controllers" />
+      <Folder Include="Area\Doctors\Controllers" />
     </ItemGroup>
 
 </Project>
