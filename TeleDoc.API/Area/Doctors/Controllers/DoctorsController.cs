@@ -1,23 +1,23 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using TeleDoc.API.Area.Patients.Models;
-using TeleDoc.API.Dtos.PatientsDto;
+using TeleDoc.API.Area.Doctors.Models;
+using TeleDoc.API.Dtos.DoctorsDto;
 using TeleDoc.API.Models.Account;
 using TeleDoc.API.Services;
 using TeleDoc.DAL.Entities;
 using TeleDoc.DAL.Enums;
 using TeleDoc.DAL.Exceptions;
 
-namespace TeleDoc.API.Area.Patients.Controllers;
+namespace TeleDoc.API.Area.Doctors.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PatientsController : Controller
+public class DoctorsController : Controller
 {
     private readonly IAuthRepository<ApplicationUser> _authRepo;
     private readonly IMapper _mapper;
-
-    public PatientsController(IAuthRepository<ApplicationUser> authRepo, IMapper mapper)
+    
+    public DoctorsController(IAuthRepository<ApplicationUser> authRepo, IMapper mapper)
     {
         _authRepo = authRepo;
         _mapper = mapper;
@@ -36,8 +36,8 @@ public class PatientsController : Controller
 
         var result = await _authRepo.Register(model);
 
-        var data = _mapper.Map<Patient>(result.Data);
-        var dataToReturn = _mapper.Map<PatientDetailsDto>(data);
+        var data = _mapper.Map<Doctor>(result.Data);
+        var dataToReturn = _mapper.Map<DoctorDetailsDto>(data);
 
         return result.Status switch
         {
@@ -56,8 +56,8 @@ public class PatientsController : Controller
 
         var result = await _authRepo.Login(model);
         
-        var data = _mapper.Map<Patient>(result.Data);
-        var dataToReturn = _mapper.Map<PatientDetailsDto>(data);
+        var data = _mapper.Map<Doctor>(result.Data);
+        var dataToReturn = _mapper.Map<DoctorDetailsDto>(data);
 
         return result.Status switch
         {
@@ -66,8 +66,4 @@ public class PatientsController : Controller
             _ => Unauthorized()
         };
     }
-    
-    
-    
-    
 }
