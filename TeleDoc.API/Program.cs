@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using TeleDoc.API.Context;
-using TeleDoc.API.Models;
 using TeleDoc.API.Services;
 using TeleDoc.DAL.Entities;
 
@@ -22,8 +21,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+builder.Services.AddCors();
+
+builder.Services.AddCors();
 
 builder.Services.AddScoped<IAuthRepository<ApplicationUser>, AuthRepository<ApplicationUser>>();
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
+
+
 
 builder.Services.AddMvc().AddNewtonsoftJson(opt =>
 {
@@ -59,7 +65,7 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

@@ -15,18 +15,14 @@ namespace TeleDoc.API.Area.Patients.Controllers;
 public class PatientsController : Controller
 {
     private readonly IAuthRepository<ApplicationUser> _authRepo;
+    private readonly IPatientRepository _patientRepo;
     private readonly IMapper _mapper;
 
-    public PatientsController(IAuthRepository<ApplicationUser> authRepo, IMapper mapper)
+    public PatientsController(IAuthRepository<ApplicationUser> authRepo, IMapper mapper, IPatientRepository patientRepo)
     {
         _authRepo = authRepo;
         _mapper = mapper;
-    }
-
-    // GET
-    public string Index()
-    {
-        return "patient is working";
+        _patientRepo = patientRepo;
     }
 
     [HttpPost("register")]
@@ -67,7 +63,33 @@ public class PatientsController : Controller
         };
     }
     
+    [HttpGet]
+    public async Task<IActionResult> GetPatientListAsync()
+    {
+        var result = await _patientRepo.GetPatientListAsync();
+
+        return Ok(result);
+    }
+
+
+    [HttpGet("p")]
+    public async Task<IActionResult> GetPatient([FromQuery] string email)
+    {
+        var result = await _patientRepo.GetPatientByEmail(email);
+
+        return Ok(result);
+    }
     
+    [HttpPut("update")]
+    public async Task<IActionResult> UpdatePatient([FromQuery] string email, Patient patient)
+    {
+        if (email != patient.Email) return BadRequest();
+        
+        var result = await _patientRepo.UpdatePatientByEmail(patient);
     
-    
+        return Ok(result);
+    }
+
+
+
 }

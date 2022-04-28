@@ -16,17 +16,13 @@ public class DoctorsController : Controller
 {
     private readonly IAuthRepository<ApplicationUser> _authRepo;
     private readonly IMapper _mapper;
+    private readonly IDoctorRepository _doctorRepo;
     
-    public DoctorsController(IAuthRepository<ApplicationUser> authRepo, IMapper mapper)
+    public DoctorsController(IAuthRepository<ApplicationUser> authRepo, IMapper mapper, IDoctorRepository doctorRepo)
     {
         _authRepo = authRepo;
         _mapper = mapper;
-    }
-
-    // GET
-    public string Index()
-    {
-        return "patient is working";
+        _doctorRepo = doctorRepo;
     }
 
     [HttpPost("register")]
@@ -66,4 +62,45 @@ public class DoctorsController : Controller
             _ => Unauthorized()
         };
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetDoctorListAsync()
+    {
+        var result = await _doctorRepo.GetDoctorListAsync();
+
+        return Ok(result);
+    }
+    
+
+
+    [HttpGet("de")]
+    public async Task<IActionResult> GetDoctorByEmail([FromQuery] string email)
+    {
+        var result = await _doctorRepo.GetDoctorByEmail(email);
+
+        return Ok(result);
+    }
+    
+    [HttpGet("dn")]
+    public async Task<IActionResult> GetDoctorByName([FromQuery] string name)
+    {
+        var result = await _doctorRepo.GetDoctorByName(name);
+
+        return Ok(result);
+    }
+
+    [HttpPut("update")]
+    public async Task<IActionResult> UpdateDoctor([FromQuery] string email, Doctor doctor)
+    {
+        if (email != doctor.Email) return BadRequest();
+        
+        var result = await _doctorRepo.UpdateDoctorByEmail(doctor);
+
+        return Ok(result);
+    }
+
+
+
+
+
 }
