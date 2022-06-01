@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using TeleDoc.API.Models;
 using TeleDoc.API.Models.Account;
 using TeleDoc.API.Services;
+using TeleDoc.API.Static;
 using TeleDoc.DAL.Entities;
 using TeleDoc.DAL.Enums;
 using TeleDoc.DAL.Exceptions;
@@ -30,7 +31,7 @@ public class AuthController : Controller
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var result = await _authRepo.Register(model);
+        var result = await _authRepo.Register(model, UserRoles.Admin);
 
         return result.Status switch
         {
@@ -46,7 +47,7 @@ public class AuthController : Controller
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var result = await _authRepo.Login(model);
+        var result = await _authRepo.Login(model, UserRoles.Admin);
 
         return result.Status switch
         {

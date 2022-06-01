@@ -1,15 +1,19 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TeleDoc.API.Area.Doctors.Models;
 using TeleDoc.API.Dtos.DoctorsDto;
 using TeleDoc.API.Models.Account;
 using TeleDoc.API.Services;
+using TeleDoc.API.Static;
 using TeleDoc.DAL.Entities;
 using TeleDoc.DAL.Enums;
 using TeleDoc.DAL.Exceptions;
 
 namespace TeleDoc.API.Area.Doctors.Controllers;
 
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = CustomeRoles.DoctorAdmin)]
 [ApiController]
 [Route("api/[controller]")]
 public class DoctorsController : Controller
@@ -25,12 +29,13 @@ public class DoctorsController : Controller
         _doctorRepo = doctorRepo;
     }
 
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var result = await _authRepo.Register(model);
+        var result = await _authRepo.Register(model, UserRoles.Doctor);
 
         var data = _mapper.Map<Doctor>(result.Data);
         var dataToReturn = _mapper.Map<DoctorDetailsDto>(data);
@@ -45,12 +50,13 @@ public class DoctorsController : Controller
 
     }
     
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var result = await _authRepo.Login(model);
+        var result = await _authRepo.Login(model, UserRoles.Doctor);
         
         var data = _mapper.Map<Doctor>(result.Data);
         var dataToReturn = _mapper.Map<DoctorDetailsDto>(data);
@@ -63,6 +69,7 @@ public class DoctorsController : Controller
         };
     }
     
+    
     [HttpGet]
     public async Task<IActionResult> GetDoctorListAsync()
     {
@@ -72,7 +79,7 @@ public class DoctorsController : Controller
     }
     
 
-
+    
     [HttpGet("de")]
     public async Task<IActionResult> GetDoctorByEmail([FromQuery] string email)
     {
@@ -81,6 +88,7 @@ public class DoctorsController : Controller
         return Ok(result);
     }
     
+   
     [HttpGet("dn")]
     public async Task<IActionResult> GetDoctorByName([FromQuery] string name)
     {

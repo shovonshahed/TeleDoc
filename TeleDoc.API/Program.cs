@@ -1,7 +1,11 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using TeleDoc.API.Context;
+using TeleDoc.API.Data;
 using TeleDoc.API.Services;
 using TeleDoc.DAL.Entities;
 
@@ -14,6 +18,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 // builder.Services.AddSwaggerGen();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
+                .GetBytes(builder.Configuration.GetSection("AppSetting:Token").Value)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+// builder.Services.AddAuthorization();
+
 var connectionString = builder.Configuration.GetConnectionString("TeleDocDb");
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
     options.UseSqlServer(connectionString, m => m.MigrationsAssembly("TeleDoc.API")));
@@ -21,7 +39,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
-builder.Services.AddCors();
 
 builder.Services.AddCors();
 
@@ -67,8 +84,11 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+await AppDbInitializer.SeedUsersAndRoleAsync(app);
 
 app.Run();

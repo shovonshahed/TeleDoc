@@ -23,7 +23,7 @@ public class AuthRepository<T> : IAuthRepository<T> where T : ApplicationUser, n
         _config = config;
     }
 
-    public async Task<CustomResponse> Register(RegisterViewModel model)
+    public async Task<CustomResponse> Register(RegisterViewModel model, string role)
     {
         var user = await _userManager.FindByEmailAsync(model.Email);
 
@@ -44,6 +44,7 @@ public class AuthRepository<T> : IAuthRepository<T> where T : ApplicationUser, n
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);
+        await _userManager.AddToRoleAsync(user, role);
 
         if (!result.Succeeded)
         {
@@ -58,7 +59,7 @@ public class AuthRepository<T> : IAuthRepository<T> where T : ApplicationUser, n
         return response;
     }
 
-    public async Task<LoginResponse> Login(LoginViewModel model)
+    public async Task<LoginResponse> Login(LoginViewModel model, string role)
     {
         var user = await _userManager.FindByEmailAsync(model.Email);
 
@@ -80,7 +81,8 @@ public class AuthRepository<T> : IAuthRepository<T> where T : ApplicationUser, n
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id),
                     new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.Email, user.Email)
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Role, role)
                 };
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSetting:Token").Value));

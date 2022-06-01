@@ -1,4 +1,4 @@
-namespace TeleDoc.API.Area.Admin.Enums;
+namespace TeleDoc.API.Area.Admins.Enums;
 
 public enum DayPeriod
 {
