@@ -1,19 +1,24 @@
+using Microsoft.AspNetCore.Identity;
 using TeleDoc.API.Area.Doctors.Models;
 
-namespace TeleDoc.API.Dtos.DoctorsDto;
+namespace TeleDoc.API.Models;
 
-public class DoctorDetailsDto
+public class ApplicationUser : IdentityUser
 {
-    public string? UserName { get; set; }
     public string? Name { get; set; }
-    public string? Email { get; set; }
     public string? Gender { get; set; }
     public DateTime DateOfBirth { get; set; }
     public string? Address { get; set; }
-    public string? PhoneNumber { get; set; }
+
+    public string? Role { get; set; }
+    
+    public string? Disease { get; set; }
+    
     public string? Speciality { get; set; }
     public string? College { get; set; }
     public string? CertificateUrl { get; set; }
     
     public IList<Schedule>? Schedules { get; set; }
+    
+    
 }

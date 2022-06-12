@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TeleDoc.API.Area.Patients.Models;
 using TeleDoc.API.Dtos.PatientsDto;
+using TeleDoc.API.Models;
 using TeleDoc.API.Models.Account;
 using TeleDoc.API.Services;
 using TeleDoc.API.Static;
-using TeleDoc.DAL.Entities;
 using TeleDoc.DAL.Enums;
 using TeleDoc.DAL.Exceptions;
 
@@ -96,6 +96,30 @@ public class PatientsController : Controller
     
         return Ok(result);
     }
+
+    [AllowAnonymous]
+    [HttpPost("resetPassword")]
+    public async Task<IActionResult> ForGotPassword([FromQuery] string email)
+    {
+        var model = new ForgotPasswordViewModel()
+        {
+            Email = email
+        };
+        var result = await _authRepo.ForgotPassword(model);
+
+        if (result.Status == ResponseStatus.NotFound)
+        {
+            throw new NotFoundException(email);
+        }
+        else if (result.Status == ResponseStatus.Succeeded)
+        {
+            var url = Url.RouteUrl("url", new { code = result.Data }, protocol: HttpContext.Request.Scheme);
+
+        }
+
+        return Ok();
+    }
+
 
 
 

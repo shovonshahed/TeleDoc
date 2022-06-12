@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeleDoc.API.Context;
 
@@ -11,9 +12,10 @@ using TeleDoc.API.Context;
 namespace TeleDoc.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220528003703_addedRole")]
+    partial class addedRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -206,38 +208,6 @@ namespace TeleDoc.API.Migrations
                     b.ToTable("MedicinePeriod");
                 });
 
-            modelBuilder.Entity("TeleDoc.API.Area.Doctors.Models.Schedule", b =>
-                {
-                    b.Property<int>("ScheduleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ScheduleId"), 1L, 1);
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DoctorId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ScheduleId");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("DoctorId");
-
-                    b.ToTable("Schedules");
-                });
-
             modelBuilder.Entity("TeleDoc.API.Area.Patients.Models.Prescription", b =>
                 {
                     b.Property<int>("Id")
@@ -261,7 +231,7 @@ namespace TeleDoc.API.Migrations
                     b.ToTable("Prescription");
                 });
 
-            modelBuilder.Entity("TeleDoc.API.Models.ApplicationUser", b =>
+            modelBuilder.Entity("TeleDoc.DAL.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -361,14 +331,14 @@ namespace TeleDoc.API.Migrations
 
             modelBuilder.Entity("TeleDoc.API.Area.Doctors.Models.Doctor", b =>
                 {
-                    b.HasBaseType("TeleDoc.API.Models.ApplicationUser");
+                    b.HasBaseType("TeleDoc.DAL.Entities.ApplicationUser");
 
                     b.HasDiscriminator().HasValue("Doctor");
                 });
 
             modelBuilder.Entity("TeleDoc.API.Area.Patients.Models.Patient", b =>
                 {
-                    b.HasBaseType("TeleDoc.API.Models.ApplicationUser");
+                    b.HasBaseType("TeleDoc.DAL.Entities.ApplicationUser");
 
                     b.HasDiscriminator().HasValue("Patient");
                 });
@@ -384,7 +354,7 @@ namespace TeleDoc.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("TeleDoc.API.Models.ApplicationUser", null)
+                    b.HasOne("TeleDoc.DAL.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -393,7 +363,7 @@ namespace TeleDoc.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("TeleDoc.API.Models.ApplicationUser", null)
+                    b.HasOne("TeleDoc.DAL.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -408,7 +378,7 @@ namespace TeleDoc.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TeleDoc.API.Models.ApplicationUser", null)
+                    b.HasOne("TeleDoc.DAL.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -417,7 +387,7 @@ namespace TeleDoc.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("TeleDoc.API.Models.ApplicationUser", null)
+                    b.HasOne("TeleDoc.DAL.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -437,19 +407,6 @@ namespace TeleDoc.API.Migrations
                     b.Navigation("Period");
                 });
 
-            modelBuilder.Entity("TeleDoc.API.Area.Doctors.Models.Schedule", b =>
-                {
-                    b.HasOne("TeleDoc.API.Models.ApplicationUser", null)
-                        .WithMany("Schedules")
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("TeleDoc.API.Area.Doctors.Models.Doctor", "Doctor")
-                        .WithMany()
-                        .HasForeignKey("DoctorId");
-
-                    b.Navigation("Doctor");
-                });
-
             modelBuilder.Entity("TeleDoc.API.Area.Patients.Models.Prescription", b =>
                 {
                     b.HasOne("TeleDoc.API.Area.Doctors.Models.Doctor", "Doctor")
@@ -466,11 +423,6 @@ namespace TeleDoc.API.Migrations
             modelBuilder.Entity("TeleDoc.API.Area.Patients.Models.Prescription", b =>
                 {
                     b.Navigation("Medicines");
-                });
-
-            modelBuilder.Entity("TeleDoc.API.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("Schedules");
                 });
 
             modelBuilder.Entity("TeleDoc.API.Area.Patients.Models.Patient", b =>

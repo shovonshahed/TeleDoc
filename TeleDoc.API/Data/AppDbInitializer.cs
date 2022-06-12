@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
+using TeleDoc.API.Models;
 using TeleDoc.API.Static;
-using TeleDoc.DAL.Entities;
 using TeleDoc.DAL.Extensions;
 
 namespace TeleDoc.API.Data;
@@ -32,23 +32,25 @@ public static class AppDbInitializer
                 Name = "Admin User",
                 UserName = adminEmail,
                 Email = adminEmail,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                Role = UserRoles.Admin
             };
             await userManager.CreateAsync(newAdmin, "pass123");
             await userManager.AddToRoleAsync(newAdmin, UserRoles.Admin);
         }
         
-        const string doctortEmail = "doctor@email.com";
-        var doctortUser = await userManager.FindByEmailAsync(doctortEmail);
-        if (doctortUser is null)
+        const string doctorEmail = "doctor@email.com";
+        var doctorUser = await userManager.FindByEmailAsync(doctorEmail);
+        if (doctorUser is null)
         {
             var newDoctor = new ApplicationUser()
             {
                 Name = "Doctor User",
-                UserName = doctortEmail,
-                Email = doctortEmail,
+                UserName = doctorEmail,
+                Email = doctorEmail,
                 Gender = UserGender.Female,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                Role = UserRoles.Doctor
             };
             await userManager.CreateAsync(newDoctor, "pass123");
             await userManager.AddToRoleAsync(newDoctor, UserRoles.Patient);
@@ -65,7 +67,8 @@ public static class AppDbInitializer
                 UserName = patientEmail,
                 Email = patientEmail,
                 Gender = UserGender.Male,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                Role = UserRoles.Patient
             };
             await userManager.CreateAsync(newPatient, "pass123");
             await userManager.AddToRoleAsync(newPatient, UserRoles.Patient);

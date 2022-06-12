@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using TeleDoc.API.Area.Patients.Models;
 using TeleDoc.API.Context;
 using TeleDoc.API.Dtos.PatientsDto;
-using TeleDoc.DAL.Entities;
+using TeleDoc.API.Models;
+using TeleDoc.API.Static;
 
 namespace TeleDoc.API.Services;
 
@@ -21,13 +22,16 @@ public class PatientRepository : IPatientRepository
         _dbContext = dbContext;
     }
 
-    public async Task<List<Patient>?> GetPatientListAsync()
+    public async Task<List<PatientDetailsDto>?> GetPatientListAsync()
     {
-        var result = await _userManager.Users.ToListAsync();
+        var result = await _userManager.Users
+            .Where(r => r.Role == UserRoles.Patient)
+            .ToListAsync();
         
         var data = _mapper.Map<List<Patient>>(result);
+        var dataToReturn = _mapper.Map<List<PatientDetailsDto>>(data);
 
-        return data;
+        return dataToReturn;
 
     }
 

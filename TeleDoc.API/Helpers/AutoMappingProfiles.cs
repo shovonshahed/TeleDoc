@@ -3,7 +3,7 @@ using TeleDoc.API.Area.Doctors.Models;
 using TeleDoc.API.Area.Patients.Models;
 using TeleDoc.API.Dtos.DoctorsDto;
 using TeleDoc.API.Dtos.PatientsDto;
-using TeleDoc.DAL.Entities;
+using TeleDoc.API.Models;
 
 namespace TeleDoc.API.Helpers;
 

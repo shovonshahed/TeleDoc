@@ -1,4 +1,4 @@
-using TeleDoc.DAL.Entities;
+using TeleDoc.API.Models;
 
 namespace TeleDoc.API.Area.Patients.Models;
 
