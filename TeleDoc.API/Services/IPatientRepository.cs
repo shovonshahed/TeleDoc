@@ -1,3 +1,4 @@
+using TeleDoc.API.Area.Doctors.Models;
 using TeleDoc.API.Area.Patients.Models;
 using TeleDoc.API.Dtos.PatientsDto;
 
@@ -8,5 +9,6 @@ public interface IPatientRepository
     Task<List<PatientDetailsDto>?> GetPatientListAsync();
     Task<Patient> GetPatientByEmail(string email);
     Task<Patient> UpdatePatientByEmail(Patient patient);
+    Task<Schedule?> GetAppoinment(string email);
 
 }

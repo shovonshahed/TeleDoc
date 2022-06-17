@@ -2,8 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeleDoc.API", "TeleDoc.API\TeleDoc.API.csproj", "{10DD9F58-5D71-4BC3-8337-CF7D03FF0914}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeleDoc.DAL", "TeleDoc.DAL\TeleDoc.DAL.csproj", "{3B2FFBA7-3D48-4C90-A317-BAFC2A8CBC7A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,9 +12,5 @@ Global
 		{10DD9F58-5D71-4BC3-8337-CF7D03FF0914}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10DD9F58-5D71-4BC3-8337-CF7D03FF0914}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10DD9F58-5D71-4BC3-8337-CF7D03FF0914}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3B2FFBA7-3D48-4C90-A317-BAFC2A8CBC7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3B2FFBA7-3D48-4C90-A317-BAFC2A8CBC7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3B2FFBA7-3D48-4C90-A317-BAFC2A8CBC7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3B2FFBA7-3D48-4C90-A317-BAFC2A8CBC7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

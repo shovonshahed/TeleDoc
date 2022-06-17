@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using TeleDoc.API.Enums;
+using TeleDoc.API.Exceptions;
 using TeleDoc.API.Models;
 using TeleDoc.API.Models.Account;
 using TeleDoc.API.Services;
 using TeleDoc.API.Static;
-using TeleDoc.DAL.Enums;
-using TeleDoc.DAL.Exceptions;
 
 namespace TeleDoc.API.Controllers;
 
@@ -23,6 +23,12 @@ public class AuthController : Controller
     public string Index()
     {
         return "Auth Controller is working";
+    }
+
+    [HttpGet("~/")]
+    public string IndexRoot()
+    {
+        return "wow!!!. TeleDoc api is working!";
     }
 
     [HttpPost("register")]

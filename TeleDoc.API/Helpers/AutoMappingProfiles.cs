@@ -15,7 +15,8 @@ public class AutoMappingProfiles : Profile
         CreateMap<Patient, PatientDetailsDto>();
         
         CreateMap<Doctor, ApplicationUser>().ReverseMap();
-        CreateMap<Doctor, DoctorDetailsDto>();
+        CreateMap<Doctor, DoctorDetailsDto>()
+            .ForMember(s => s.Schedules, opt => opt.MapFrom(d => d.Schedules));
         
         
     }

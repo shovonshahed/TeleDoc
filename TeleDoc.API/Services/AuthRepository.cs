@@ -4,10 +4,10 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.IdentityModel.Tokens;
+using TeleDoc.API.Enums;
+using TeleDoc.API.Extensions;
 using TeleDoc.API.Models;
 using TeleDoc.API.Models.Account;
-using TeleDoc.DAL.Enums;
-using TeleDoc.DAL.Extensions;
 
 namespace TeleDoc.API.Services;
 

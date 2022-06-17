@@ -1,15 +1,16 @@
+using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TeleDoc.API.Area.Patients.Models;
 using TeleDoc.API.Dtos.PatientsDto;
+using TeleDoc.API.Enums;
+using TeleDoc.API.Exceptions;
 using TeleDoc.API.Models;
 using TeleDoc.API.Models.Account;
 using TeleDoc.API.Services;
 using TeleDoc.API.Static;
-using TeleDoc.DAL.Enums;
-using TeleDoc.DAL.Exceptions;
 
 namespace TeleDoc.API.Area.Patients.Controllers;
 
@@ -118,6 +119,16 @@ public class PatientsController : Controller
         }
 
         return Ok();
+    }
+
+    [HttpGet("appoinment")]
+    public async Task<IActionResult> Appoinment()
+    {
+        var email = User.FindFirst(ClaimTypes.Email)!.Value;
+
+        var schedule = await _patientRepo.GetAppoinment(email);
+
+        return Ok(schedule);
     }
 
 

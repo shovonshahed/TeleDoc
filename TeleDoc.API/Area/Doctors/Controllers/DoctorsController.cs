@@ -1,16 +1,17 @@
 using System.Security.Claims;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TeleDoc.API.Area.Doctors.Models;
 using TeleDoc.API.Dtos.DoctorsDto;
+using TeleDoc.API.Enums;
+using TeleDoc.API.Exceptions;
 using TeleDoc.API.Models;
 using TeleDoc.API.Models.Account;
 using TeleDoc.API.Services;
 using TeleDoc.API.Static;
-using TeleDoc.DAL.Enums;
-using TeleDoc.DAL.Exceptions;
 
 namespace TeleDoc.API.Area.Doctors.Controllers;
 
@@ -125,11 +126,33 @@ public class DoctorsController : Controller
         var uId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
         // if (id != uId) return Unauthorized();
 
+        // var schedules = _doctorRepo.GetScheduleAsync(uId);
+        // if (schedules.Result.Count > 5)
+        //     throw new FailedException("schedule for 7 days already added");
+
         var result = await _doctorRepo.AddDoctorSchedule(uId, schedule);
         
         return Ok(result);
     }
 
+    [AllowAnonymous]
+    [HttpGet("schedule")]
+    public async Task<IActionResult> GetDoctorScheduleList([FromQuery] string email)
+    {
+        var result = await _doctorRepo.GetScheduleAsync(email);
 
+        return Ok(result);
+    }
+
+    [AllowAnonymous]
+    [HttpPost("booking")]
+    public async Task<IActionResult> AddBookingSchedule([FromQuery] string email,[FromQuery]  int dayOfWeek)
+    {
+        var pEmail = User.FindFirst(ClaimTypes.Email)!.Value;
+
+        var result = await _doctorRepo.AddBooking(pEmail, email, dayOfWeek);
+
+        return Ok(result);
+    }
 
 }

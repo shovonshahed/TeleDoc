@@ -1,6 +1,6 @@
+using TeleDoc.API.Extensions;
 using TeleDoc.API.Models;
 using TeleDoc.API.Models.Account;
-using TeleDoc.DAL.Extensions;
 
 namespace TeleDoc.API.Services;
 

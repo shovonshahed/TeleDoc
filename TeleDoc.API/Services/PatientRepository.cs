@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using TeleDoc.API.Area.Doctors.Models;
 using TeleDoc.API.Area.Patients.Models;
 using TeleDoc.API.Context;
 using TeleDoc.API.Dtos.PatientsDto;
@@ -66,5 +67,13 @@ public class PatientRepository : IPatientRepository
         await _dbContext.SaveChangesAsync();
 
         return patient;
+    }
+
+    public async Task<Schedule?> GetAppoinment(string email)
+    {
+        var booking = await _dbContext.Booking!.FirstOrDefaultAsync(s => s.PatientEmail == email);
+        var schedule = await _dbContext.Schedules!.FirstOrDefaultAsync(b => b.ScheduleId == booking!.Id);
+
+        return schedule;
     }
 }

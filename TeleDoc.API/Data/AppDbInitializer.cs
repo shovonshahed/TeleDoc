@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
+using TeleDoc.API.Extensions;
 using TeleDoc.API.Models;
 using TeleDoc.API.Static;
-using TeleDoc.DAL.Extensions;
 
 namespace TeleDoc.API.Data;
 
