@@ -61,6 +61,7 @@ public class PatientRepository : IPatientRepository
             pat.Disease = patient.Disease;
             pat.PhoneNumber = patient.PhoneNumber;
             pat.DateOfBirth = patient.DateOfBirth;
+            
 
         }
 

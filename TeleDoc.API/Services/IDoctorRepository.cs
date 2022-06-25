@@ -9,7 +9,7 @@ public interface IDoctorRepository
     Task<DoctorDetailsDto> GetDoctorByEmail(string email);
     Task<List<DoctorDetailsDto>?> GetDoctorByName(string name);
     Task<Doctor> GetDoctorBySpeciality(string speciality);
-    Task<Doctor> UpdateDoctorByEmail(Doctor doctor);
+    Task<DoctorDetailsDto> UpdateDoctorByEmail(Doctor doctor);
     Task<DoctorDetailsDto> ApplyForCertified(string id);
     Task<DoctorDetailsDto> AddDoctorSchedule(string id, Schedule schedule);
     Task<List<Schedule>> GetScheduleAsync(string docId);

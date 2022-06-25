@@ -22,23 +22,12 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="6.0.5" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.6" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Area\Admins\Controllers\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Remove="Area\Admins\Controllers\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Area\Admins\Controllers\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Remove="Area\Admins\Controllers\**" />
+      <Folder Include="Area\Admins\Controllers" />
     </ItemGroup>
 
 </Project>

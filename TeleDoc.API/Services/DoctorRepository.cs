@@ -84,9 +84,9 @@ public class DoctorRepository : IDoctorRepository
         throw new NotImplementedException();
     }
 
-    public async Task<Doctor> UpdateDoctorByEmail(Doctor doctor)
+    public async Task<DoctorDetailsDto> UpdateDoctorByEmail(Doctor doctor)
     {
-        var doc = _dbContext.Users.FirstOrDefault(d => d.Email == doctor.Email);
+        var doc = _dbContext.Users.Include(m => m.MapLocation).FirstOrDefault(d => d.Email == doctor.Email);
         // doc = _mapper.Map<Doctor>(doc);
         // doc = doctor;
 
@@ -94,18 +94,29 @@ public class DoctorRepository : IDoctorRepository
         {
             // _dbContext.Update(doc);
             doc.Name = doctor.Name;
-            doc.Speciality = doctor.Speciality;
+            // doc.Email = doctor.Email;
             doc.Gender = doctor.Gender;
-            doc.Address = doctor.Address;
-            doc.College = doctor.College;
             doc.DateOfBirth = doctor.DateOfBirth;
+            doc.Address = doctor.Address;
+            // doc.MapLocation = doctor.MapLocation;
+            doc.MapLocation!.Latitude = doctor.MapLocation!.Latitude;
+            doc.MapLocation.Longitude = doctor.MapLocation.Longitude;
+            
+            doc.College = doctor.College;
+            doc.Speciality = doctor.Speciality;
+            doc.CertificateUrl = doctor.CertificateUrl;
 
             // doc = doctor;
         }
 
+        
+        
         await _dbContext.SaveChangesAsync();
 
-        return doctor;
+        var data = _mapper.Map<Doctor>(doctor);
+        var dataToReturn = _mapper.Map<DoctorDetailsDto>(data);
+        
+        return dataToReturn;
     }
 
     public async Task<DoctorDetailsDto> ApplyForCertified(string id)

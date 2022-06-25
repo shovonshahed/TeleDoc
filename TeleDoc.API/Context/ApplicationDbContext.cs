@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using TeleDoc.API.Area.Admins.Models;
 using TeleDoc.API.Area.Doctors.Models;
 using TeleDoc.API.Area.Patients.Models;
 using TeleDoc.API.Models;
@@ -20,6 +21,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Doctor>? Doctor { get; set; }
     public DbSet<Schedule>? Schedules { get; set; }
     public DbSet<BookingSchedule>? Booking { get; set; }
+    public DbSet<MapLocation>? MapLocations { get; set; }
+    public DbSet<Ambulance>? Ambulances { get; set; }
     
     
 }
