@@ -36,14 +36,14 @@ public class PatientRepository : IPatientRepository
 
     }
 
-    public async Task<Patient> GetPatientByEmail(string email)
+    public async Task<PatientDetailsDto> GetPatientByEmail(string email)
     {
-        var result = await _userManager.FindByEmailAsync(email);
+        var result = await _userManager.Users.FirstOrDefaultAsync(p => p.Email == email && p.Role == UserRoles.Patient);
         
         var data = _mapper.Map<Patient>(result);
         var dataToReturn = _mapper.Map<PatientDetailsDto>(data);
 
-        return data;
+        return dataToReturn;
     }
 
     public async Task<Patient> UpdatePatientByEmail(Patient patient)
@@ -70,11 +70,40 @@ public class PatientRepository : IPatientRepository
         return patient;
     }
 
-    public async Task<Schedule?> GetAppoinment(string email)
+    public async Task<List<Schedule>?> GetAppoinment(string email)
     {
-        var booking = await _dbContext.Booking!.FirstOrDefaultAsync(s => s.PatientEmail == email);
-        var schedule = await _dbContext.Schedules!.FirstOrDefaultAsync(b => b.ScheduleId == booking!.Id);
+        // var booking = await _dbContext.Booking!.FirstOrDefaultAsync(s => s.PatientEmail == email);
+        // var schedule = await _dbContext.Schedules!.FirstOrDefaultAsync(b => b.ScheduleId == booking!.Id);
 
-        return schedule;
+        var booking = _dbContext.Booking!
+            .Include(s => s.Schedules)
+            .Where(x => x.PatientEmail == email)
+            .ToList();
+
+        var schedule = _dbContext.Schedules.ToList();
+
+        var result = (from s in schedule
+            join b in booking 
+                on s.ScheduleId equals b.Schedules.ScheduleId
+            select s).ToList();
+        
+        return result;
+    }
+
+    public async Task UpdateImageUrl(string uId, string? url)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(p => p.Email ==uId);
+
+        if (url is not null)
+        {
+            user.PrescriptionUrl = url;
+            await _dbContext.SaveChangesAsync();
+        }
+    }
+
+
+    public async Task Save()
+    {
+         await _dbContext.SaveChangesAsync();
     }
 }

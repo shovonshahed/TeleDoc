@@ -12,6 +12,7 @@ public class PatientDetailsDto
     public string? Address { get; set; }
     public string? PhoneNumber { get; set; }
     public string? Disease { get; set; }
+    public string? PrescriptionUrl { get; set; }
 
     public IList<Prescription>? Prescriptions { get; set; }
 }

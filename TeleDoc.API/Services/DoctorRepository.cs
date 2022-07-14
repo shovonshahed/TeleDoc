@@ -44,6 +44,7 @@ public class DoctorRepository : IDoctorRepository
     public async Task<DoctorDetailsDto> GetDoctorByEmail(string email)
     {
         var result = await _userManager.Users
+            .Include(m => m.MapLocation)
             .Include(d => d.Schedules)!
             .ThenInclude(p => p.Patients)
             .FirstOrDefaultAsync(d => d.Email == email && d.Role == UserRoles.Doctor);
@@ -86,7 +87,9 @@ public class DoctorRepository : IDoctorRepository
 
     public async Task<DoctorDetailsDto> UpdateDoctorByEmail(Doctor doctor)
     {
-        var doc = _dbContext.Users.Include(m => m.MapLocation).FirstOrDefault(d => d.Email == doctor.Email);
+        var doc = await _dbContext.Users
+            .Include(m => m.MapLocation)
+            .FirstOrDefaultAsync(d => d.Email == doctor.Email);
         // doc = _mapper.Map<Doctor>(doc);
         // doc = doctor;
 
@@ -98,9 +101,27 @@ public class DoctorRepository : IDoctorRepository
             doc.Gender = doctor.Gender;
             doc.DateOfBirth = doctor.DateOfBirth;
             doc.Address = doctor.Address;
+            doc.PhoneNumber = doctor.PhoneNumber;
+            doc.CertificateUrl = doctor.CertificateUrl;
             // doc.MapLocation = doctor.MapLocation;
-            doc.MapLocation!.Latitude = doctor.MapLocation!.Latitude;
-            doc.MapLocation.Longitude = doctor.MapLocation.Longitude;
+
+            if (doctor.MapLocation is not null)
+            {
+                if (doc.MapLocation is null)
+                {
+                    doc.MapLocation = new MapLocation()
+                    {
+                        Latitude = doctor.MapLocation.Latitude,
+                        Longitude = doctor.MapLocation.Longitude
+                    };
+                }
+                else
+                {
+                    doc.MapLocation.Latitude = doctor.MapLocation.Latitude;
+                    doc.MapLocation.Longitude = doctor.MapLocation.Longitude;
+                }
+                
+            }
             
             doc.College = doctor.College;
             doc.Speciality = doctor.Speciality;
@@ -108,12 +129,10 @@ public class DoctorRepository : IDoctorRepository
 
             // doc = doctor;
         }
-
-        
         
         await _dbContext.SaveChangesAsync();
 
-        var data = _mapper.Map<Doctor>(doctor);
+        var data = _mapper.Map<Doctor>(doc);
         var dataToReturn = _mapper.Map<DoctorDetailsDto>(data);
         
         return dataToReturn;
@@ -187,5 +206,21 @@ public class DoctorRepository : IDoctorRepository
         // schedule!.Patients?.Add(patientEmail);
 
         return schedule;
+    }
+
+    public async Task UpdateImageUrl(string uId, string? url)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(p => p.Email ==uId);
+
+        if (url is not null)
+        {
+            user.CertificateUrl = url;
+            await _dbContext.SaveChangesAsync();
+        }
+    }
+
+    public async void Save()
+    {
+        await _dbContext.SaveChangesAsync();
     }
 }

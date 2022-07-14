@@ -23,12 +23,14 @@ public class DoctorsController : Controller
     private readonly IAuthRepository<ApplicationUser> _authRepo;
     private readonly IMapper _mapper;
     private readonly IDoctorRepository _doctorRepo;
+    private readonly IWebHostEnvironment _hostEnvironment;
     
-    public DoctorsController(IAuthRepository<ApplicationUser> authRepo, IMapper mapper, IDoctorRepository doctorRepo)
+    public DoctorsController(IAuthRepository<ApplicationUser> authRepo, IMapper mapper, IDoctorRepository doctorRepo, IWebHostEnvironment hostEnvironment)
     {
         _authRepo = authRepo;
         _mapper = mapper;
         _doctorRepo = doctorRepo;
+        _hostEnvironment = hostEnvironment;
     }
 
     [AllowAnonymous]
@@ -153,6 +155,34 @@ public class DoctorsController : Controller
         var result = await _doctorRepo.AddBooking(pEmail, email, dayOfWeek);
 
         return Ok(result);
+    }
+
+    [HttpPost("documents")]
+    public async Task<IActionResult> AddDocuments([FromForm] IFormFile? file)
+    {
+        var dId =  User.FindFirst(ClaimTypes.Email)!.Value;
+        var doctor = await _doctorRepo.GetDoctorByEmail(dId);
+
+        var wwwRootPath = _hostEnvironment.WebRootPath;
+        if (file is not null)
+        {
+            string fileName = Guid.NewGuid().ToString();
+            var uploads = Path.Combine(wwwRootPath, @"images/");
+            var extension = Path.GetExtension(file.FileName);
+
+            using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
+            {
+                file.CopyTo(fileStreams);
+            }
+
+            var url = @"/images/" + fileName + extension;
+            await _doctorRepo.UpdateImageUrl(dId, url);
+            _doctorRepo.Save();
+
+            return Ok("image updated");
+        }
+        
+        return BadRequest("something wrong");
     }
 
 }

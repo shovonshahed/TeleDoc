@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeleDoc.API.Context;
 
@@ -11,9 +12,10 @@ using TeleDoc.API.Context;
 namespace TeleDoc.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220628032658_addedPrimary")]
+    partial class addedPrimary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,9 +187,6 @@ namespace TeleDoc.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
@@ -285,12 +284,12 @@ namespace TeleDoc.API.Migrations
                     b.Property<string>("PatientEmail")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SchedulesScheduleId")
+                    b.Property<int?>("ScheduleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SchedulesScheduleId");
+                    b.HasIndex("ScheduleId");
 
                     b.ToTable("Booking");
                 });
@@ -417,9 +416,6 @@ namespace TeleDoc.API.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("PrescriptionUrl")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");
@@ -562,11 +558,9 @@ namespace TeleDoc.API.Migrations
 
             modelBuilder.Entity("TeleDoc.API.Area.Doctors.Models.BookingSchedule", b =>
                 {
-                    b.HasOne("TeleDoc.API.Area.Doctors.Models.Schedule", "Schedules")
+                    b.HasOne("TeleDoc.API.Area.Doctors.Models.Schedule", null)
                         .WithMany("Patients")
-                        .HasForeignKey("SchedulesScheduleId");
-
-                    b.Navigation("Schedules");
+                        .HasForeignKey("ScheduleId");
                 });
 
             modelBuilder.Entity("TeleDoc.API.Area.Doctors.Models.Schedule", b =>

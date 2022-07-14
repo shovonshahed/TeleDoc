@@ -14,6 +14,7 @@ public class ApplicationUser : IdentityUser
     public string? Role { get; set; }
     
     public string? Disease { get; set; }
+    public string? PrescriptionUrl { get; set; }
     
     public string? Speciality { get; set; }
     public string? College { get; set; }

@@ -22,12 +22,14 @@ public class PatientsController : Controller
     private readonly IAuthRepository<ApplicationUser> _authRepo;
     private readonly IPatientRepository _patientRepo;
     private readonly IMapper _mapper;
+    private readonly IWebHostEnvironment _hostEnvironment;
 
-    public PatientsController(IAuthRepository<ApplicationUser> authRepo, IMapper mapper, IPatientRepository patientRepo)
+    public PatientsController(IAuthRepository<ApplicationUser> authRepo, IMapper mapper, IPatientRepository patientRepo, IWebHostEnvironment hostEnvironment)
     {
         _authRepo = authRepo;
         _mapper = mapper;
         _patientRepo = patientRepo;
+        _hostEnvironment = hostEnvironment;
     }
 
     [AllowAnonymous]
@@ -129,6 +131,35 @@ public class PatientsController : Controller
         var schedule = await _patientRepo.GetAppoinment(email);
 
         return Ok(schedule);
+    }
+
+    [HttpPost("prescription")]
+    public async Task<IActionResult> AddPrescription([FromForm] IFormFile? file)
+    {
+        var email = User.FindFirst(ClaimTypes.Email)!.Value;
+        var patient = await _patientRepo.GetPatientByEmail(email);
+
+        var wwwRootPath = _hostEnvironment.WebRootPath;
+        if (file is not null)
+        {
+            string fileName = Guid.NewGuid().ToString();
+            var uploads = Path.Combine(wwwRootPath, @"images/");
+            var extension = Path.GetExtension(file.FileName);
+
+            await using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
+            {
+                await file.CopyToAsync(fileStreams);
+            }
+            
+            var url = @"/images/" + fileName + extension;
+
+            await _patientRepo.UpdateImageUrl(email, url);
+            await _patientRepo.Save();
+            
+            return Ok("prescription updated");
+        }
+        
+        return BadRequest(" something wrong patient");
     }
 
 
