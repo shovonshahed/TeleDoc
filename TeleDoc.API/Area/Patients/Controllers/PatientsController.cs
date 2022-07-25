@@ -14,7 +14,7 @@ using TeleDoc.API.Static;
 
 namespace TeleDoc.API.Area.Patients.Controllers;
 
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = CustomeRoles.PatientAdmin)]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = CustomeRoles.PatientDoctor + ",Admin")]
 [ApiController]
 [Route("api/[controller]")]
 public class PatientsController : Controller
